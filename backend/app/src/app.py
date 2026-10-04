@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from src.db.database import create_database
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup code
+    await create_database() 
     yield
-    # Shutdown code
 
 app = FastAPI(lifespan=lifespan)
 
