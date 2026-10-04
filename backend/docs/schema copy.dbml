@@ -1,0 +1,175 @@
+// RenderHavenShop database schema
+// Generated from SQLAlchemy models in backend/app/db/models
+
+Table user {
+  id uuid [pk]
+  name String(200)
+  image_url String(500)
+  last_name String(200)
+  email String(200)
+  dob String(50)
+  gender String(50)
+  number String(15) [unique, not null]
+  password String(255) [not null, default: '123456']
+}
+
+Table address {
+  id uuid [pk]
+  user_id uuid [not null, ref: > user.id]
+  street String(255) [not null]
+  city String(100) [not null]
+  state String(100) [not null]
+  zip_code String(20) [not null]
+
+  Note: 'ON DELETE CASCADE via user_id'
+}
+
+Table categories {
+  c_id uuid [pk]
+  parent_id uuid [ref: > categories.c_id]
+  name String(200) [not null]
+  image_url String(500)
+  Type String(200) [not null, default: 'Other']
+  discount Float [not null, default: 0.0]
+  is_active Boolean [default: true]
+  is_new Boolean [default: false]
+
+}
+
+
+Table categories_to_products {
+  id uuid [pk]
+  c_id uuid [not null, ref: > categories.c_id]
+  p_id uuid [not null, ref: > products.p_id]
+}
+
+Table products {
+  p_id uuid [pk]
+  name String(200) [not null]
+  image_url String(500)
+  discount Float [not null, default: 0.0]
+  is_active Boolean [default: true]
+  is_new Boolean [default: false]
+
+}
+
+Table product_variations {
+  id uuid [pk]
+  p_id uuid [not null, ref: > products.p_id]
+  v_op_id uuid [not null, ref: > variation_options.v_op_id]
+
+  indexes {
+    (p_id, v_op_id) [unique]
+  }
+
+  Note: 'Many-to-many join between products and variation_options. Both FKs ON DELETE CASCADE'
+}
+
+Table item_variations {
+  id uuid [pk]
+  pv_id uuid [not null, ref: > product_variations.id]
+  i_id uuid [not null, ref: > product_items.i_id]
+
+  Note: 'Which variation option value a specific item holds, one row per variation dimension. ON DELETE CASCADE via i_id'
+}
+
+Table product_items {
+  i_id uuid [pk]
+  p_id uuid [ref: > products.p_id]
+  name String(200) [not null]
+  image_url String(500)
+  price Float [not null, default: 0.0]
+  stock Integer [not null, default: 0]
+  d_id uuid [ref: > descriptions.d_id]
+  cart_count Integer [not null, default: 0]
+  discount Float [not null, default: 0.0]
+}
+
+Table img_items {
+  id uuid [pk]
+  i_id uuid [not null, ref: > product_items.i_id]
+  image_url String(500) [not null]
+
+  Note: 'ON DELETE CASCADE via i_id'
+}
+
+Table descriptions {
+  d_id uuid [pk]
+  content Text [not null]
+  tag_name String(50) [not null]
+}
+
+Table variations {
+  v_id uuid [pk]
+  name String(200) [not null]
+}
+
+Table variation_options {
+  v_op_id uuid [pk]
+  v_id uuid [not null, ref: > variations.v_id]
+  variation_name String(200) [not null]
+  value String(200) [not null]
+  disc String(300)
+}
+
+
+
+Table orders {
+  o_id uuid [pk]
+  user_id uuid [not null, ref: > user.id]
+  address String(500)
+  status order_status [not null, default: 'NEW']
+  datetime DateTime [not null]
+  payINFO String(100)
+  short_note String(300)
+  delivery_charge Integer
+  total_price Float [not null]
+}
+
+Table order_items {
+  oi_id uuid [pk]
+  order_id uuid [not null, ref: > orders.o_id]
+  i_id uuid [ref: > product_items.i_id]
+  name String(200) [not null]
+  image_url String(500)
+  price Float [not null, default: 0.0]
+  original_price Float [not null, default: 0.0]
+  quantity Integer [not null, default: 1]
+  other_details Text
+
+  Note: 'ON DELETE CASCADE via order_id'
+}
+
+Table coupon_codes {
+  id uuid [pk]
+  code String(50) [unique, not null]
+  discount_amount Numeric(10,2) [not null]
+  discount_type discount_type_enum [not null]
+  max_uses Integer [not null, default: 1]
+  use_count Integer [not null, default: 0]
+  times_used Integer [not null, default: 0]
+  min_order_amount Numeric(10,2) [not null, default: 0]
+  created_at DateTime
+}
+
+Table user_coupon_usage {
+  id uuid [pk]
+  user_id uuid [not null, ref: > user.id]
+  coupon_code String(50) [ref: > coupon_codes.code]
+  used_at DateTime
+
+  Note: 'coupon_code FK is ON DELETE SET NULL'
+}
+
+Enum order_status {
+  NEW
+  IN_PROGRESS
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+Enum discount_type_enum {
+  fixed
+  percentage
+}

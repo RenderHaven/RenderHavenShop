@@ -1,0 +1,78 @@
+Table categories {
+  c_id uuid [pk]
+  parent_id uuid [ref: > categories.c_id]
+  name String(200) [not null]
+  banner_url String(500)
+  Type String(200) [not null, default: 'Other']
+  discount_type discount_type [not null, default: 'fixed']
+  discount Float [not null, default: 0.0]
+  is_active Boolean [default: true]
+
+}
+
+Table categories_to_products {
+  id uuid [pk]
+  c_id uuid [not null, ref: > categories.c_id]
+  p_id uuid [not null, ref: > products.p_id]
+}
+
+Table products {
+  p_id uuid [pk]
+  name String(200) [not null]
+  thumbnail_url String(500)
+  discount_type discount_type [not null, default: 'fixed']
+  discount Float [not null, default: 0.0]
+  is_active Boolean [default: true]
+}
+
+
+Table product_item_variations {
+  id uuid [pk]
+  p_id uuid [not null, ref: > products.p_id]
+  i_id uuid [not null, ref: > items.i_id]
+
+  v_ids uuid[]
+
+}
+
+Table items {
+  i_id uuid [pk]
+  p_id uuid [ref: > products.p_id]
+  name String(200) [not null]
+  thumbnail_url String(500)
+  price Float [not null, default: 0.0]
+  stock Integer [not null, default: 0]
+  description Text
+  is_active Boolean [default: true]
+  cart_count Integer [not null, default: 0]
+  discount_type discount_type [not null, default: 'fixed']
+  discount Float [not null, default: 0.0]
+}
+
+Table items_images {
+  id uuid [pk]
+  i_id uuid [not null, ref: > items.i_id]
+  image_url String(500) [not null]
+
+  Note: 'ON DELETE CASCADE via i_id'
+}
+
+Table descriptions {
+  d_id uuid [pk]
+  content Text [not null]
+  tag_name String(50) [not null]
+}
+
+Table variations {
+  v_id uuid [pk]
+  key String(200) [not null]
+  name String(200) [not null]
+  value String(200) [not null]
+  desc String(300)
+}
+
+
+Enum discount_type {
+  fixed
+  percentage
+}

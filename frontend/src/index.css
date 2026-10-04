@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+/* ─── Design Tokens ─────────────────────────────────────────────── */
+:root {
+  --color-olive: #6B7A3E;
+  --color-yellow: #E8D44D;
+  --color-cream: #F5F2EA;
+  --color-dark: #1A1A1A;
+}
+
+/* ─── Tailwind v4 custom utilities ─────────────────────────────── */
+@theme {
+  --color-olive: #6B7A3E;
+  --color-yellow: #E8D44D;
+  --color-cream: #F5F2EA;
+  --color-dark: #1A1A1A;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* ─── Base reset ────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typography helpers ────────────────────────────────────────── */
+.font-display {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+/* ─── Custom animations ─────────────────────────────────────────── */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.25s ease-out both;
+}
+
+/* ─── Scrollbar styling ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-olive); border-radius: 99px; }
