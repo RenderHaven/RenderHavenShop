@@ -1,6 +1,13 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup code
+    yield
+    # Shutdown code
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
