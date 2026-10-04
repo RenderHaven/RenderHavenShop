@@ -1,14 +1,13 @@
-name : renderhaven
+name : renderhavenshop
 
 services:
   postgres:
     image: postgres:15
     container_name: postgres_db
-    restart: always
     environment:
       POSTGRES_USER: vikram
       POSTGRES_PASSWORD: vikram_2003
-      POSTGRES_DB: renderhaven_db
+      POSTGRES_DB: renderhavenshop_db
     ports:
       - "5432:5432"
     volumes:
