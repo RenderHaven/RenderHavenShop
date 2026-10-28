@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from src.db.database import create_database
-import src.db.models  
+import src.db.models
+from src.api import api_router
+from src.core.openapi import setup_openapi
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -9,6 +11,8 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(api_router)
+setup_openapi(app)
 
 
 @app.get("/")

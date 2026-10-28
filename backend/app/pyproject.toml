@@ -8,6 +8,7 @@ dependencies = [
     "aiosqlite>=0.22.1",
     "asyncpg>=0.31.0",
     "bcrypt>=5.0.0",
+    "cloudinary>=1.46.3",
     "fastapi>=0.142.2",
     "fastapi-users[sqlalchemy]>=15.0.5",
     "pydantic-settings>=2.15.0",
